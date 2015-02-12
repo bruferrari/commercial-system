@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Novo produto</ui:define>
+
+	<ui:define name="corpo">
+		<h1>Cadastros Gerais</h1>
+		<h:form id="frm">
+			<p:tabView activeIndex="0" dynamic="true" cache="false" style="margin-top: 20px;">
+				<p:tab title="Dados Principais">
+					<h:panelGrid columns="2" cellpadding="4">
+						<p:outputLabel value="Razão Social" for="razaoSocial" />
+						<p:inputText id="razaoSocial" size="40" />
+
+						<p:outputLabel value="CNPJ" for="cnpj" />
+						<p:inputText id="cnpj" size="40" />
+
+						<p:outputLabel value="Cidade do contrato" for="cidadeContrato" />
+						<p:inputText id="cidadeContrato" size="40" />
+
+					</h:panelGrid>
+				</p:tab>
+
+				<p:tab title="Contrato">
+					<h:panelGrid columns="2" cellpadding="4">
+						<p:outputLabel value="Data do contrato" for="dtContrato" />
+						<p:inputText id="dtContrato" size="20" />
+
+						<p:outputLabel value="Valor do contrato" for="vlContrato" />
+						<p:inputText id="vlContrato" size="10" />
+
+						<p:outputLabel value="Método de pagamento" for="metodoPagamento" />
+						<p:selectOneMenu id="metodoPagamento">
+							<f:selectItem itemLabel="Selecione" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Forma de pagamento" for="formaPagamento" />
+						<p:selectOneMenu id="formaPagamento">
+							<f:selectItem itemLabel="Selecione" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+				</p:tab>
+
+				<p:tab title="Cursos">
+					<h:panelGrid columns="2" cellpadding="4">
+
+						<p:selectBooleanCheckbox />
+						<h:outputText value="Fundamentos Java e Orientação a Objetos" />
+
+						<p:selectBooleanCheckbox />
+						<h:outputText value="Desenvolvimento Web com JSF 2" />
+
+						<p:selectBooleanCheckbox />
+						<h:outputText value="Persistência de Dados com JPA 2 e Hibernate" />
+
+						<p:selectBooleanCheckbox />
+						<h:outputText value="Gerenciamento Ágil de Projetos com Scrum" />
+					</h:panelGrid>
+				</p:tab>
+			</p:tabView>
+
+			<h:panelGrid cellpadding="4">
+				<p:commandButton value="Cadastrar" />
+			</h:panelGrid>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,73 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Novo usuário</ui:define>
+
+	<ui:define name="corpo">
+		<h:form>
+			<h1>Novo Usuário</h1>
+			
+			<p:messages autoUpdate="true" closable="true" />
+
+			<p:toolbar style="margin-top: 20px;">
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/usuarios/CadastroUsuario" />
+					<p:commandButton value="Salvar" id="botaoSalvar" />
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" outcome="/usuarios/PesquisaUsuario" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painelUsuario"
+				style="width: 100%; margin-top: 20px; margin-bottom: 20px;"
+				columnClasses="rotulo, campo">
+
+				<p:outputLabel value="Nome" for="nome" />
+				<p:inputText id="nome" size="60" maxlength="80"
+					value="#{cadastroUsuarioBean.usuario.nome}" />
+
+				<p:outputLabel value="E-mail" for="email" />
+				<p:inputText id="email" size="30" maxlength="80"
+					value="#{cadastroUsuarioBean.usuario.email}" />
+
+				<p:outputLabel value="Senha" for="senha" />
+				<p:password id="senha" size="30" maxlength="30"
+					value="#{cadastroUsuarioBean.usuario.senha}" />
+
+			</p:panelGrid>
+
+			<h:panelGrid columns="2">
+				<p:selectOneMenu id="somGrupo" style="width: 150px">
+					<f:selectItem itemLabel="Administradores" />
+				</p:selectOneMenu>
+
+				<p:button value="Adicionar Grupo" />
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" style="margin-top: 5px">
+				<p:dataTable id="grupoTable" var="grupo"
+					value="#{listagemGruposUsuariosBean.gruposFiltrados}"
+					emptyMessage="Nenhum grupo cadastrado." rows="10" paginator="true"
+					paginatorAlwaysVisible="false" paginatorPosition="bottom">
+					<p:column headerText="Grupo" style="text-align: left; width: 100%">
+						<h:outputText value="Grupo" />
+					</p:column>
+
+					<p:column style="text-align: center; width: 10000px">
+						<p:button icon="ui-icon-pencil" />
+						<p:button icon="ui-icon-trash" />
+					</p:column>
+
+				</p:dataTable>
+			</h:panelGrid>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>
