@@ -1,27 +1,55 @@
 package com.algaworks.pedidovenda.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-@ManagedBean
-@RequestScoped
-public class PesquisaUsuarioBean {
+import com.algaworks.pedidovenda.model.Usuario;
+import com.algaworks.pedidovenda.repository.Usuarios;
+import com.algaworks.pedidovenda.repository.filter.ProdutoFilter;
+import com.algaworks.pedidovenda.repository.filter.UsuarioFilter;
 
-	private List<Integer> usuariosFiltrados;
+@Named
+@ViewScoped
+public class PesquisaUsuarioBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Inject
+	private Usuarios usuarios;
+
+	private UsuarioFilter filtro;
+	private List<Usuario> usuariosFiltrados;
+	private Usuario usuarioSelecionado;
 
 	public PesquisaUsuarioBean() {
-		usuariosFiltrados = new ArrayList<>();
-		for (int i = 0; i < 50; i++) {
-			usuariosFiltrados.add(i);
-		}
-
+		filtro = new UsuarioFilter();
 	}
 
-	public List<Integer> getusuariosFiltrados() {
+	public void pesquisar() {
+		usuariosFiltrados = usuarios.filtrados(filtro);
+	}
+
+	public List<Usuario> getUsuariosFiltrados() {
 		return usuariosFiltrados;
+	}
+
+	public UsuarioFilter getFiltro() {
+		return filtro;
+	}
+
+	public Usuario getUsuarioSelecionado() {
+		return usuarioSelecionado;
+	}
+
+	public void setUsuarioSelecionado(Usuario usuarioSelecionado) {
+		this.usuarioSelecionado = usuarioSelecionado;
 	}
 
 }

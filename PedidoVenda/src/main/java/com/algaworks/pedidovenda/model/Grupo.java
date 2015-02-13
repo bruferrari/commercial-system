@@ -12,9 +12,6 @@ import javax.persistence.Table;
 @Table (name = "grupo")
 public class Grupo implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private Long id;

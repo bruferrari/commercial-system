@@ -13,7 +13,8 @@
 
 			<p:toolbar style="margin-top: 20px;">
 				<p:toolbarGroup>
-					<p:commandButton value="Pesquisar" />
+					<p:commandButton value="Pesquisar" action="#{pesquisaUsuarioBean.pesquisar}"
+					update="@form" />
 				</p:toolbarGroup>
 
 				<p:toolbarGroup align="right">
@@ -25,7 +26,7 @@
 				style="width: 100%; margin-top: 20px;" columnClasses="rotulo, campo">
 				
 				<p:outputLabel value="Nome" />
-				<p:inputText size="60" />
+				<p:inputText size="60" value="#{pesquisaUsuarioBean.filtro.nome}" />
 			</p:panelGrid>
 
 			<p:dataTable id="usuariosTable" value="#{pesquisaUsuarioBean.usuariosFiltrados}"
@@ -34,11 +35,11 @@
 				rows="20" paginator="true" paginatorAlwaysVisible="false"
 				paginatorPosition="bottom">
 				<p:column headerText="Nome" style="text-align: left; width: 500px">
-					<h:outputText value="Caboclo" />
+					<h:outputText value="#{usuario.nome}" />
 				</p:column>
 				
 				<p:column headerText="E-mail" style="text-align: left; width: 200px">
-					<h:outputText value="emaildocaboclo@email.com" />
+					<h:outputText value="#{usuario.email}" />
 				</p:column>
 				
 				<p:column style="text-align: center; width: 50px">
