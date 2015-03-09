@@ -8,12 +8,13 @@
 	<ui:define name="titulo">Pesquisa de clientes</ui:define>
 
 	<ui:define name="corpo">
-		<h:form>
+		<h:form id="frmPesquisa">
 			<h1>Pesquisa de clientes</h1>
 
 			<p:toolbar style="margin-top: 20px;">
 				<p:toolbarGroup>
-					<p:commandButton value="Pesquisar" />
+					<p:commandButton value="Pesquisar" action="#{pesquisaClientesBean.pesquisar}"
+					update="@form"/>
 				</p:toolbarGroup>
 
 				<p:toolbarGroup align="right">
@@ -24,10 +25,10 @@
 			<p:panelGrid columns="2" id="painel"
 				style="width: 100%; margin-top: 20px;" columnClasses="rotulo, campo">
 				<p:outputLabel value="CPF/CNPJ" />
-				<p:inputText size="25" />
+				<p:inputText size="25" value="#{pesquisaClientesBean.filtro.doc}" />
 
 				<p:outputLabel value="Nome" />
-				<p:inputText size="60" />
+				<p:inputText size="60" value="#{pesquisaClientesBean.filtro.nome}" />
 			</p:panelGrid>
 
 			<p:dataTable id="clientesTable" value="#{pesquisaClientesBean.clientesFiltrados}"
@@ -36,22 +37,38 @@
 				rows="20" paginator="true" paginatorAlwaysVisible="false"
 				paginatorPosition="bottom">
 				<p:column headerText="Nome" style="text-align: left; width: 500px">
-					<h:outputText value="Supermercado João das Couves Ltda" />
+					<h:outputText value="#{cliente.nome}" />
 				</p:column>
 				
 				<p:column headerText="Tipo" style="text-align: left; width: 200px">
-					<h:outputText value="Jurídica" />
+					<h:outputText value="#{cliente.tipo}" />
 				</p:column>
 				
 				<p:column headerText="CPF/CNPJ" style="text-align: center; width: 250px">
-					<h:outputText value="02.493.738/0001-83" />
+					<h:outputText value="#{cliente.documentoReceitaFederal}" />
 				</p:column>
 				
 				<p:column style="text-align: center; width: 50px">
-					<p:button icon="ui-icon-pencil" title="Editar" />
-					<p:button icon="ui-icon-trash" title="Excluir" />
+					<p:button icon="ui-icon-pencil" title="Editar" outcome="/clientes/CadastroCliente">
+						<f:param name="cliente" value="#{cliente.id}" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir" oncomplete="confirmacaoExclusao.show()"
+					process="@this" update=":frmPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener value="#{cliente}" 
+							target="#{pesquisaClientesBean.clienteSelecionado}" />
+					</p:commandButton>
 				</p:column>
 			</p:dataTable>
+			
+			<p:confirmDialog header="Exclusão de Cliente"
+			message="Tem certeza que deseja excluir o cliente #{pesquisaClientesBean.clienteSelecionado.documentoReceitaFederal}?"
+			widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+			<p:button value="Não" onclick="confirmacaoExclusao.hide(); return false;" />
+			<p:commandButton value="Sim" oncomplete="confirmacaoExclusao.hide();" 
+				action="#{pesquisaClientesBean.excluir}"
+				process="@this"
+				update=":frmPesquisa:clientesTable"/>
+			</p:confirmDialog>
 
 
 		</h:form>

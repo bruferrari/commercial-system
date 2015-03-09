@@ -22,12 +22,9 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table (name = "cliente")
 public class Cliente implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	private long id;
+	private Long id;
 	private String nome;
 	private String email;
 	private String documentoReceitaFederal;
@@ -66,11 +63,11 @@ public class Cliente implements Serializable {
 
 	@Id
 	@GeneratedValue
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

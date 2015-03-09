@@ -3,13 +3,18 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
 
-	<ui:define name="titulo">Novo cliente</ui:define>
+	<ui:define name="titulo">#{cadastroClienteBean.editando ? 'Edição de cliente' : 'Novo cliente'}</ui:define>
 
 	<ui:define name="corpo">
+		<f:metadata>
+			<o:viewParam name="cliente" value="#{cadastroClienteBean.cliente}" />
+		</f:metadata>
+
 		<h:form>
-			<h1>Novo Cliente</h1>
+			<h1>#{cadastroClienteBean.editando ? 'Edição de cliente' : 'Novo
+				cliente'}</h1>
 
 			<p:messages autoUpdate="true" closable="true" />
 
@@ -17,7 +22,7 @@
 				<p:toolbarGroup>
 					<p:button value="Novo" outcome="/clientes/CadastroCliente" />
 					<p:commandButton value="Salvar" id="botaoSalvar"
-						action="#{cadastroClienteBean.salvar}" />
+						action="#{cadastroClienteBean.salvar}" update="@form" />
 				</p:toolbarGroup>
 
 				<p:toolbarGroup align="right">
@@ -28,20 +33,55 @@
 			<p:panelGrid columns="2" id="painelClientes"
 				style="width: 100%; margin-top:20px; margin-bottom: 20px;"
 				columnClasses="rotulo, campo">
-				<p:outputLabel value="Nome" for="nome" />
-				<p:inputText id="nome" size="60" maxlength="80" label="nome"
-					value="#{cadastroClienteBean.cliente.nome}" />
 
 				<p:outputLabel value="Tipo" for="tipo" />
 				<p:selectOneRadio id="tipo"
 					value="#{cadastroClienteBean.cliente.tipo}">
-					<f:selectItem itemLabel="Física" />
-					<f:selectItem itemLabel="Jurídica" />
+					<p:ajax update="groupLabelNome groupInputNome groupLabelDocumento groupInputDocumento" 
+						process="@this"
+						event="change" />
+					<f:selectItem itemLabel="Física" itemValue="FISICA" />
+					<f:selectItem itemLabel="Jurídica" itemValue="JURIDICA" />
 				</p:selectOneRadio>
 
-				<p:outputLabel value="CNPJ" for="cnpj" />
-				<p:inputText id="cnpj" size="20" maxlength="20" label="cnpj"
-					value="#{cadastroClienteBean.cliente.documentoReceitaFederal}" />
+				<h:panelGroup id="groupLabelNome">
+					<p:outputLabel value="Nome" for="nome"
+						rendered="#{cadastroClienteBean.cliente.tipo eq 'FISICA'}" />
+					<p:outputLabel value="Razão Social" for="razao"
+						rendered="#{cadastroClienteBean.cliente.tipo eq 'JURIDICA'}" />
+				</h:panelGroup>
+
+				<h:panelGroup id="groupInputNome">
+					<p:inputText id="nome" size="60" label="nome"
+						rendered="#{cadastroClienteBean.cliente.tipo eq 'FISICA'}"
+						value="#{cadastroClienteBean.cliente.nome}" />
+
+					<p:inputText id="razao" size="60" label="razao"
+						rendered="#{cadastroClienteBean.cliente.tipo eq 'JURIDICA'}"
+						value="#{cadastroClienteBean.cliente.nome}" />
+				</h:panelGroup>
+
+
+				<h:panelGroup id="groupLabelDocumento">
+					<p:outputLabel value="CPF" for="cpf"
+						rendered="#{cadastroClienteBean.cliente.tipo eq 'FISICA'}" />
+					<p:outputLabel value="CNPJ" for="cnpj"
+						rendered="#{cadastroClienteBean.cliente.tipo eq 'JURIDICA'}" />
+				</h:panelGroup>
+
+
+				<h:panelGroup id="groupInputDocumento">
+					<p:inputMask id="cpf" size="20" maxlength="20" label="cpf"
+						rendered="#{cadastroClienteBean.cliente.tipo eq 'FISICA'}"
+						value="#{cadastroClienteBean.cliente.documentoReceitaFederal}" 
+						mask="999.999.999-99"/>
+						
+					<p:inputMask id="cnpj" size="20" maxlength="20" label="cnpj"
+						rendered="#{cadastroClienteBean.cliente.tipo eq 'JURIDICA'}"
+						value="#{cadastroClienteBean.cliente.documentoReceitaFederal}"
+						mask="99.999.999/9999-99" />
+				</h:panelGroup>
+
 
 				<p:outputLabel value="E-mail" for="email" />
 				<p:inputText id="email" size="30" maxlength="80" label="email"
