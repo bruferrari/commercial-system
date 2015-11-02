@@ -6,17 +6,18 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:o="http://omnifaces.org/ui">
 
-	<ui:define name="titulo">Novo usuário</ui:define>
+	<ui:define name="titulo">#{cadastroUsuarioBean.editando ? "Edição de usuário" : "Novo Usuário"}</ui:define>
 
 	<ui:define name="corpo">
 
 		<f:metadata>
 			<o:viewParam name="usuario" value="#{cadastroUsuarioBean.usuario}" />
 			<f:event listener="#{cadastroUsuarioBean.inicializar}" type="preRenderView" />
+			
 		</f:metadata>
 
-		<h:form>
-			<h1>Novo Usuário</h1>
+		<h:form id="frmCadastroUsuario">
+			<h1>#{cadastroUsuarioBean.editando ? "Edição de usuário" : "Novo Usuário"}</h1>
 
 			<p:messages autoUpdate="true" closable="true" />
 
@@ -45,7 +46,12 @@
 					value="#{cadastroUsuarioBean.usuario.email}" />
 
 				<p:outputLabel value="Senha" for="senha" />
-				<p:password id="senha" size="30" maxlength="30"
+				<p:password id="senha" size="30" maxlength="30" feedback="true" 
+					strongLabel="Senha forte"
+					weakLabel="Senha fraca"
+					goodLabel="Senha boa"
+					inline="true"
+					promptLabel="Digite uma senha"
 					value="#{cadastroUsuarioBean.usuario.senha}" />
 
 			</p:panelGrid>
@@ -65,21 +71,35 @@
 
 			<h:panelGrid columns="2" style="margin-top: 5px">
 				<p:dataTable id="grupoTable" var="grupo"
-					value="#{listagemGruposUsuariosBean.gruposFiltrados}"
+					value="#{cadastroUsuarioBean.usuario.grupos}"
 					emptyMessage="Nenhum grupo cadastrado." rows="10" paginator="true"
 					paginatorAlwaysVisible="false" paginatorPosition="bottom">
 					<p:column headerText="Grupo" style="text-align: left; width: 100%">
-						<h:outputText value="Grupo" />
+						<h:outputText value="#{grupo.descricao}" />
 					</p:column>
 
 					<p:column style="text-align: center; width: 10000px">
-						<p:button icon="ui-icon-pencil" />
-						<p:button icon="ui-icon-trash" />
+						<p:commandButton icon="ui-icon-trash" 
+							oncomplete="dlgConfirmacaoExclusaoGrupo.show();"
+							update=":frmCadastroUsuario:grupoTable">
+								<f:setPropertyActionListener value="#{grupo}" 
+										target="#{cadastroUsuarioBean.grupoSelecionado}" />
+							</p:commandButton>
 					</p:column>
 
 				</p:dataTable>
 			</h:panelGrid>
 
+			<p:confirmDialog widgetVar="dlgConfirmacaoExclusaoGrupo" id="dialogConfirmacaoExclusaoGrupo"
+				header="Excluir grupo" message="Tem certeza que deseja excluir grupo?">
+				<p:button value="Cancelar" icon="ui-icon-cancel" 
+					onclick="dlgConfirmacaoExclusaoGrupo.hide(); return false;" />
+					<p:commandButton value="Sim" icon="ui-icon-trash"
+						oncomplete="dlgConfirmacaoExclusaoGrupo.hide(); return false;"
+						action="#{cadastroUsuarioBean.removerGrupoUsuario}"
+						process="@this"
+						update="@form" />
+			</p:confirmDialog>
 
 		</h:form>
 	</ui:define>

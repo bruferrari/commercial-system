@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:panelGrid id="pnl" columns="3" style="width: 100%;"
+		columnClasses="rotulo, campo">
+		<p:outputLabel value="Número de parcelas" rendered="#{not cadastroPedidoBean.pedido.naoAlteravel}"/>
+		<p:selectOneMenu value="#{cadastroPedidoBean.numeroDeParcelas}" 
+				rendered="#{not cadastroPedidoBean.pedido.naoAlteravel}">
+			<f:selectItems value="#{cadastroPedidoBean.listaParcelas}"
+				var="parcela" itemLabel="#{parcela}" itemValue="#{parcela}" />
+		</p:selectOneMenu>
+		
+		<h:panelGroup style="float: right !important">
+			<p:commandButton value="Simular" 
+			action="#{cadastroPedidoBean.simularParcelamento}" process="@form"
+			update="@form" rendered="#{not cadastroPedidoBean.pedido.naoAlteravel}"/>
+			
+		<p:commandButton value="Limpar simulação" 
+			action="#{cadastroPedidoBean.limparSimulacaoParcelas}" process="@form"
+			update="@form" rendered="#{not cadastroPedidoBean.pedido.naoAlteravel}"/>
+		</h:panelGroup>
+		
+	</h:panelGrid>
+
+	<p:dataTable value="#{cadastroPedidoBean.listaParcelamento}"
+		var="parcela" id="tabelaParcelamento" style="width: 100%"
+		emptyMessage="Nenhuma simulação efetuada." editable="true"
+		editMode="cell" paginator="true" rows="12" paginatorAlwaysVisible="false">
+
+		<p:ajax event="cellEdit" listener="#{cadastroPedidoBean.onCellEdit}"
+			update="@this" />
+			
+		<p:column headerText="Parcela" style="text-align: center;">
+			<h:outputText value="#{parcela.parcela}" style="text-align: center;"/>
+		</p:column>
+
+		<p:column headerText="Vencimento" style="text-align: center;">
+			<h:outputText value="#{parcela.vencimento}" style="text-align: center;">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Valor" style="text-align: center;">
+			<h:outputText value="#{parcela.valor}" style="text-align: center;">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Status" style="text-align: center;">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{parcela.status}" style="text-align: center;"/>
+				</f:facet>
+				<f:facet name="input">
+					<h:selectOneMenu value="#{parcela.status}" style="width:100%">
+						<f:selectItems value="#{cadastroPedidoBean.statusParcela}"
+							var="status" itemLabel="#{status.descricao}"
+							itemValue="#{status.descricao}" />
+					</h:selectOneMenu>
+				</f:facet>
+			</p:cellEditor>
+		</p:column>
+
+		<p:columnGroup type="footer">
+			<p:row>
+				<p:column colspan="3" footerText="Subtotal"
+					style="text-align: right" />
+				<p:column style="text-align: right">
+					<f:facet name="footer">
+						<h:outputText value="#{cadastroPedidoBean.subtotalParcelado}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</f:facet>
+				</p:column>
+			</p:row>
+		</p:columnGroup>
+	</p:dataTable>
+</ui:composition>

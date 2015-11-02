@@ -11,8 +11,8 @@
 		<f:metadata>
 			<o:viewParam name="cliente" value="#{cadastroClienteBean.cliente}" />
 		</f:metadata>
-
-		<h:form>
+		
+		<h:form id="frmCadastroCliente">
 			<h1>#{cadastroClienteBean.editando ? 'Edição de cliente' : 'Novo
 				cliente'}</h1>
 
@@ -22,7 +22,11 @@
 				<p:toolbarGroup>
 					<p:button value="Novo" outcome="/clientes/CadastroCliente" />
 					<p:commandButton value="Salvar" id="botaoSalvar"
-						action="#{cadastroClienteBean.salvar}" update="@form" />
+						action="#{cadastroClienteBean.salvar}" update="@form"
+						disabled="#{not seguranca.salvarClientePermitido}" />
+					<p:commandButton value="Enviar por e-mail"
+						action="#{cadastroClienteBean.enviarEmail}"
+						process="@this" />
 				</p:toolbarGroup>
 
 				<p:toolbarGroup align="right">
@@ -89,75 +93,110 @@
 
 			</p:panelGrid>
 
-			<p:button value="Adicionar Endereço"
-				onclick="inclusaoEndereco.show(); return false;" />
-			<p:dataTable id="novoClienteTable" var="novoCliente"
-				value="#{listagemEndClientesBean.enderecosFiltrados}"
-				style="margin-top: 10px" emptyMessage="Nenhum cliente encontrado."
+			<p:commandButton value="Adicionar Endereço"
+				oncomplete="inclusaoEndereco.show();">
+				<f:setPropertyActionListener value="#{cadastroClienteBean.cliente}" 
+						target="#{cadastroEnderecoBean.cliente}"/>	
+			</p:commandButton>
+			
+			<p:dataTable id="enderecosTable" var="endereco"
+				value="#{cadastroClienteBean.cliente.enderecos}"
+				style="margin-top: 10px" emptyMessage="Nenhum endereço encontrado."
 				rows="20" paginator="true" paginatorAlwaysVisible="false"
 				paginatorPosition="bottom">
 				<p:column headerText="Logradouro"
 					style="text-align: left; width: 400px;">
-					<h:outputText value="Rua das Pedras Grandes Azuis" />
+					<h:outputText value="#{endereco.logradouro}" />
 				</p:column>
 
 				<p:column headerText="Número"
 					style="text-align: left; width: 100px;">
-					<h:outputText value="1234" />
+					<h:outputText value="#{endereco.numero}" />
 				</p:column>
 
 				<p:column headerText="Complemento"
 					style="text-align: left; width: 200px;">
-					<h:outputText value="ap 1022" />
+					<h:outputText value="#{endereco.complemento}" />
 				</p:column>
 
 				<p:column headerText="CEP" style="text-align: left; width: 150px;">
-					<h:outputText value="19902-050" />
+					<h:outputText value="#{endereco.cep}" />
 				</p:column>
 
 				<p:column headerText="Cidade/UF"
 					style="text-align: left; width: 200px;">
-					<h:outputText value="Ourinhos/SP" />
+					<h:outputText value="#{endereco.cidade}/#{endereco.uf}" />
 				</p:column>
 
 				<p:column style="text-align: center; width: 100px">
-					<p:button icon="ui-icon-pencil" />
-					<p:button icon="ui-icon-trash" />
+					<p:commandButton icon="ui-icon-pencil"
+						oncomplete="inclusaoEndereco.show();"
+						process="@this" 
+						update=":frmCadastroCliente:dialogInclusao" >
+						
+						<f:setPropertyActionListener value="#{endereco}" 
+								target="#{cadastroClienteBean.endereco}" />
+							
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-trash"
+						oncomplete="dlgExclusaoEndereco.show();"
+						process="@this" update=":frmCadastroCliente:dialogExclusaoEndereco">
+						<f:setPropertyActionListener value="#{endereco}" 
+								target="#{cadastroClienteBean.endereco}" />	
+					</p:commandButton>
 				</p:column>
 			</p:dataTable>
 
-			<p:dialog header="Inclusão de Endereço" widgetVar="inclusaoEndereco"
+			<p:dialog header="Inclusão de Endereço" widgetVar="inclusaoEndereco" id="dialogInclusao"
 				draggable="false" resizable="false" modal="false" minimizable="true">
 				<h:panelGrid id="pnlInclusaoEndereco" columns="2"
 					style="margin: 5px;">
 					<h:outputText value="Logradouro" />
 					<p:inputText size="40" label="logradouro"
-						value="#{cadastroEnderecoBean.endereco.logradouro}" />
+						value="#{cadastroClienteBean.endereco.logradouro}" />
 
 					<h:outputText value="Número" />
 					<p:inputText size="4" label="numero"
-						value="#{cadastroEnderecoBean.endereco.numero}" />
+						value="#{cadastroClienteBean.endereco.numero}" />
 
 					<h:outputText value="Complemento" />
 					<p:inputText label="complemento"
-						value="#{cadastroEnderecoBean.endereco.complemento}" />
+						value="#{cadastroClienteBean.endereco.complemento}" />
 
 					<h:outputText value="CEP" />
 					<p:inputText size="11" label="cep"
-						value="#{cadastroEnderecoBean.endereco.cep}" />
+						value="#{cadastroClienteBean.endereco.cep}" />
 
 					<h:outputText value="Cidade" />
 					<p:inputText label="cidade"
-						value="#{cadastroEnderecoBean.endereco.cidade}" />
+						value="#{cadastroClienteBean.endereco.cidade}" />
 
 					<h:outputText value="UF" />
 					<p:inputText size="2" label="uf"
-						value="#{cadastroEnderecoBean.endereco.uf}" />
+						value="#{cadastroClienteBean.endereco.uf}" />
 
 					<p:commandButton value="Incluir" style="margin-top: 10px;"
-						action="#{cadastroEnderecoBean.salvar}" />
+						action="#{cadastroClienteBean.adicionarNovoEndereco}"
+						oncomplete="inclusaoEndereco.hide(); return false;"
+						update="@form" rendered="#{!cadastroClienteBean.endereco.existente}" />
+						
+						<p:commandButton value="Alterar" style="margin-top: 10px;"
+						action="#{cadastroClienteBean.editarEndereco}"
+						oncomplete="inclusaoEndereco.hide(); return false;"
+						update="@form" rendered="#{cadastroClienteBean.endereco.existente}" />
 				</h:panelGrid>
 			</p:dialog>
+			
+			<p:confirmDialog widgetVar="dlgExclusaoEndereco" id="dialogExclusaoEndereco"
+				header="Excluir endereço" message="Deseja excluir o endereço?">
+				<p:button value="Cancelar" icon="ui-icon-cancel"
+					onclick="dlgExclusaoEndereco.hide(); return false;" />
+				<p:commandButton value="Sim" icon="ui-icon-trash"
+					oncomplete="dlgExclusaoEndereco.hide(); return false;"
+					action="#{cadastroClienteBean.removerEndereco}"
+					process="@this"
+					update=":frmCadastroCliente:enderecosTable" />
+			</p:confirmDialog>
 
 		</h:form>
 	</ui:define>

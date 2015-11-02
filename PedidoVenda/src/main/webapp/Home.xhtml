@@ -4,10 +4,29 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
+	
+	
+	<f:metadata>
+		<f:viewParam name="dummy" />
+		<f:event listener="#{graficoPedidosCriadosBean.preRender}" type="preRenderView" />
+	</f:metadata>
 
 	<ui:define name="titulo">Dashboard</ui:define>
 
 	<ui:define name="corpo">
-		<br/><br/><br/>Seja bem vindo!<br/><br/><br/>
+		
+	<p:lineChart value="#{graficoPedidosCriadosBean.model}" title="Pedidos criados"
+		style="height: 400px;" animate="true" minY="0" legendPosition="e" />
+		
+	<p:pieChart value="#{graficoPedidosCriadosBean.pieChartModel}" title="Vendas totais por vendedor"
+		showDataLabels="true" fill="false" legendPosition="w" dataFormat="value"
+		extender="ext"
+		style="margin-top: 20px" />
+	<script>
+		function ext() {
+			this.cfg.seriesDefaults.rendererOptions.dataLabelFormatString = 'R$ %.2f';
+		}
+	</script>
+
 	</ui:define>
 </ui:composition>

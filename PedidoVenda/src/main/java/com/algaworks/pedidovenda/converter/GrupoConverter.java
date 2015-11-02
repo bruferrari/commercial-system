@@ -6,17 +6,17 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
 import com.algaworks.pedidovenda.model.Grupo;
-import com.algaworks.pedidovenda.repository.GruposRepository;
+import com.algaworks.pedidovenda.repository.Grupos;
 import com.algaworks.pedidovenda.util.cdi.CDIServiceLocator;
 
 @FacesConverter(forClass = Grupo.class)
 public class GrupoConverter implements Converter {
 	
-	private GruposRepository gruposRepository;
+	private Grupos gruposRepository;
 	private Grupo grupo;
 	
 	public GrupoConverter() {
-		gruposRepository = CDIServiceLocator.getBean(GruposRepository.class);
+		gruposRepository = CDIServiceLocator.getBean(Grupos.class);
 	}
 
 	@Override

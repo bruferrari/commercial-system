@@ -34,7 +34,7 @@
 	<div style="float: right; margin-right: 110px">
 		<span
 			style="float: left; height: 30px; line-height: 30px; margin-right: 60px">
-			Olá usuário! </span>
+			Olá #{seguranca.nomeUsuario}! </span>
 
 		<h:form style="display: inline-block">
 			<p:menubar styleClass="menu-sistema">
@@ -45,12 +45,16 @@
 					<p:menuitem value="Categorias" />
 					<p:menuitem value="Produtos" outcome="/produtos/PesquisaProduto" />
 				</p:submenu>
+				<p:submenu label="Relatórios">
+					<p:menuitem value="Pedidos Emitidos" outcome="/relatorios/RelatorioPedidosEmitidos" />
+					<p:menuitem value="Produtos" outcome="/relatorios/RelatorioProdutos" />
+				</p:submenu>
 				<p:submenu label="Pedidos">
 					<p:menuitem value="Novo Pedido" outcome="/pedidos/CadastroPedido" />
 					<p:menuitem value="Pesquisa" outcome="/pedidos/PesquisaPedido" />
 				</p:submenu>
 
-				<p:menuitem value="Sair" />
+				<p:menuitem value="Sair" url="/j_spring_security_logout" />
 			</p:menubar>
 		</h:form>
 	</div>

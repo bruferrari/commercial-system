@@ -14,6 +14,7 @@ import com.algaworks.pedidovenda.model.Usuario;
 import com.algaworks.pedidovenda.repository.Usuarios;
 import com.algaworks.pedidovenda.repository.filter.ProdutoFilter;
 import com.algaworks.pedidovenda.repository.filter.UsuarioFilter;
+import com.algaworks.pedidovenda.util.jsf.FacesUtil;
 
 @Named
 @ViewScoped
@@ -38,6 +39,14 @@ public class PesquisaUsuarioBean implements Serializable {
 
 	public List<Usuario> getUsuariosFiltrados() {
 		return usuariosFiltrados;
+	}
+	
+	public void excluir() {
+		usuarios.remover(usuarioSelecionado);
+		usuariosFiltrados.remove(usuarioSelecionado);
+		
+		FacesUtil.addInfoMessage("Usuário " + usuarioSelecionado.getNome() 
+							+ " excluído com sucesso!" );
 	}
 
 	public UsuarioFilter getFiltro() {

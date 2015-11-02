@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.algaworks.pedidovenda.service.NegocioException;
 import com.algaworks.pedidovenda.validation.SKU;
 
 @Entity
@@ -121,6 +123,22 @@ public class Produto implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public void baixarEstoque(Integer quantidade) {
+		int novaQuantidade = quantidadeEstoque - quantidade;
+		
+		if (novaQuantidade < 0) {
+			throw new NegocioException("Não há disponibilidade no estoque de " 
+							+ quantidade + " itens do produto " + this.getSku() + "." );
+		}
+		
+		this.setQuantidadeEstoque(novaQuantidade);
+	}
+	
+	@Transient
+	public void adicionarEstoque(Integer quantidade) {
+		this.setQuantidadeEstoque(getQuantidadeEstoque() + quantidade);
 	}
 
 }

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -16,12 +17,9 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table(name = "endereco")
 public class Endereco implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	private long id;
+	private Long id;
 	private String logradouro;
 	private String numero;
 	private String complemento;
@@ -32,11 +30,11 @@ public class Endereco implements Serializable {
 
 	@Id
 	@GeneratedValue
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -124,6 +122,16 @@ public class Endereco implements Serializable {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	@Transient
+	private boolean isNaoExistente() {
+		return this.getId() == null;
+	}
+
+	@Transient
+	public boolean isExistente() {
+		return !isNaoExistente();
 	}
 
 }

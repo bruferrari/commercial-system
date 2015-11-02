@@ -71,7 +71,7 @@ public class Cliente implements Serializable {
 		this.id = id;
 	}
 
-	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
 	public List<Endereco> getEnderecos() {
 		return enderecos;
 	}
@@ -95,7 +95,7 @@ public class Cliente implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -111,6 +111,16 @@ public class Cliente implements Serializable {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	@Transient
+	public boolean isNaoExistente() {
+		return !isExistente();
+	}
+	
+	@Transient
+	private boolean isExistente() {
+		return this.getId() != null;
 	}
 
 }
